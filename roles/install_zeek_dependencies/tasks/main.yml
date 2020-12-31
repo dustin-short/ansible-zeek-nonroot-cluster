@@ -1,0 +1,20 @@
+---
+- name: install dependencies
+  apt:
+    name:
+      - cmake
+      - make
+      - gcc
+      - g++
+      - flex
+      - bison
+      - libpcap-dev
+      - libssl-dev
+      - python-dev
+      - swig
+      - zlib1g-dev
+      - libmaxminddb-dev
+      - postfix
+      - gdb
+      - python-pip
+    state: present

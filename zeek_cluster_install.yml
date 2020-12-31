@@ -1,0 +1,12 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    - zeek_ver: zeek-3.2.3
+    - zeek_paths:
+        - dir: /zeek
+        - dir: /opt/zeek
+  roles:
+    - zeek_user_and_directories
+    - install_zeek_dependencies
+    - copy_zeek_source_code
