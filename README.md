@@ -1,6 +1,6 @@
 # ansible-zeek-nonroot-cluster
 
-Ansible role that installs [Zeek] (https://zeek.org/) (formerly Bro) and configures it to run as a non-root user
+Ansible role that installs [Zeek](https://zeek.org/) (formerly Bro) and configures it to run as a non-root user
 ## Requirements
 
 None.
