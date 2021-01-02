@@ -1,7 +1,0 @@
----
-- name: extract zeek to /home/zeek
-  unarchive:
-    src: "{{ zeek_ver }}.tar.gz"
-    dest: /home/zeek
-    owner: zeek
-    group: zeek

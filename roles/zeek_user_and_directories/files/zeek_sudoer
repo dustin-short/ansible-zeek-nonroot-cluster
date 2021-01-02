@@ -1,4 +1,0 @@
-Cmnd_Alias ZEEK_SETCAP = /sbin/setcap cap_net_raw\,cap_net_admin=eip /opt/zeek/bin/zeek
-Cmnd_Alias CAPSTATS_SETCAP = /sbin/setcap cap_net_raw\,cap_net_admin=eip /opt/zeek/bin/capstats
-zeek ALL=NOPASSWD: ZEEK_SETCAP, CAPSTATS_SETCAP
-Defaults!/sbin/setcap !requiretty

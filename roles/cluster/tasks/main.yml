@@ -1,0 +1,64 @@
+---
+- name: install dependencies
+  apt:
+    name:
+      - cmake
+      - make
+      - gcc
+      - g++
+      - flex
+      - bison
+      - libpcap-dev
+      - libssl-dev
+      - python-dev
+      - swig
+      - zlib1g-dev
+      - libmaxminddb-dev
+      - postfix
+      - gdb
+      - python-pip
+    state: present
+
+- name: create zeek user and group
+  user:
+    name: zeek
+    shell: /bin/bash
+    home: /home/zeek
+
+- name: create dependent directories
+  file:
+    path: "{{ item.dir }}"
+    owner: zeek
+    group: zeek
+    state: directory
+  with_items: "{{ zeek_paths }}"
+
+- name: copy sudoers file for zeek nonroot user
+  copy:
+    src: zeek_sudoer
+    dest: /etc/sudoers.d/
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: create zeek user and group
+  user:
+    name: zeek
+    shell: /bin/bash
+    home: /home/zeek
+
+- name: create dependent directories
+  file:
+    path: "{{ item.dir }}"
+    owner: zeek
+    group: zeek
+    state: directory
+  with_items: "{{ zeek_paths }}"
+
+- name: copy sudoers file for zeek nonroot user
+  copy:
+    src: zeek_sudoer
+    dest: /etc/sudoers.d/
+    owner: root
+    group: root
+    mode: '0644'
