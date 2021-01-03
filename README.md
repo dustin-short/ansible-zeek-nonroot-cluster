@@ -13,5 +13,5 @@ Use the name of the zeek package minus the file extention
 
 Zeek paths
 
-        - dir: /zeek
-        - dir: /opt/zeek
+        - /zeek #log path
+        - /opt/zeek #zeek path
