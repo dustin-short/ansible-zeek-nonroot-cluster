@@ -27,11 +27,11 @@
 
 - name: create dependent directories
   file:
-    path: "{{ item.dir }}"
+    path: "{{ item }}"
     owner: zeek
     group: zeek
     state: directory
-  with_items: "{{ zeek_paths }}"
+  with_items: "{{ paths }}"
 
 - name: copy sudoers file for zeek nonroot user
   copy:
@@ -41,24 +41,15 @@
     group: root
     mode: '0644'
 
-- name: create zeek user and group
-  user:
-    name: zeek
-    shell: /bin/bash
-    home: /home/zeek
-
-- name: create dependent directories
-  file:
-    path: "{{ item.dir }}"
+- name: extract zeek to /home/zeek
+  unarchive:
+    src: "{{ zeek_ver }}.tar.gz"
+    dest: /home/zeek
     owner: zeek
     group: zeek
-    state: directory
-  with_items: "{{ zeek_paths }}"
 
-- name: copy sudoers file for zeek nonroot user
-  copy:
-    src: zeek_sudoer
-    dest: /etc/sudoers.d/
-    owner: root
-    group: root
-    mode: '0644'
+- name: configure zeek source
+  command: "./configure --with-pcap=/usr/local/lib --with-geoip=/usr/share/GeoIP/ --prefix={{ item.2 }} --logdir={{ item.1 }}"
+  args:
+    chdir: /home/zeek/{{ zeek_ver }}
+  with_items: "{{ paths }}"

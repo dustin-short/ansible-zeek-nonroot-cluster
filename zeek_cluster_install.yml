@@ -3,8 +3,8 @@
   become: yes
   vars:
     - zeek_ver: zeek-3.2.3
-    - zeek_paths:
-        - dir: /zeek
-        - dir: /opt/zeek
+    - paths:
+        - /zeek #log path
+        - /opt/zeek #zeek path
   roles:
     - cluster 
