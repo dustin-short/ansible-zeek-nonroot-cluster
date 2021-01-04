@@ -47,9 +47,23 @@
     dest: /home/zeek
     owner: zeek
     group: zeek
+  when: "'manager' in group_names"
 
-- name: configure zeek source
-  command: "./configure --with-pcap=/usr/local/lib --with-geoip=/usr/share/GeoIP/ --prefix={{ item.2 }} --logdir={{ item.1 }}"
-  args:
+- name: install zeek
+  make:
     chdir: /home/zeek/{{ zeek_ver }}
-  with_items: "{{ paths }}"
+    target: install
+  become_user: zeek
+  when: "'manager' in group_names"
+  async: 1000
+  poll: 0
+  register: make_zeek
+
+- name: check on install zeek task
+  async_status:
+    jid: "{{ make_zeek.ansible_job_id }}"
+  become_user: zeek
+  register: job_result
+  until: job_result.finished
+  retries: 10
+  delay: 10

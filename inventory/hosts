@@ -1,1 +1,8 @@
+[manager]
 homelab-zeek
+
+[worker]
+
+[proxy]
+
+[logger]
