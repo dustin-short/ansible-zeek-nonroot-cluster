@@ -49,6 +49,14 @@
     group: zeek
   when: "'manager' in group_names"
 
+- name: configure zeek source
+  command: "./configure --with-pcap=/usr/local/lib --with-geoip=/usr/share/GeoIP/ --prefix={{ item.2 }} --logdir={{ item.1 }}"
+  args:
+    chdir: /home/zeek/{{ zeek_ver }}
+  become_user: zeek
+  with_items: "{{ paths }}"
+  when: "'manager' in group_names"
+
 - name: install zeek
   make:
     chdir: /home/zeek/{{ zeek_ver }}
@@ -57,7 +65,7 @@
       NUM_THREADS: 4
   become_user: zeek
   when: "'manager' in group_names"
-  async: 1000
+  async: 3600
   poll: 0
   register: make_zeek
 
@@ -67,5 +75,5 @@
   become_user: zeek
   register: job_result
   until: job_result.finished
-  retries: 10
+  retries: 360
   delay: 10
