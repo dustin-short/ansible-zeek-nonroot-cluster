@@ -53,6 +53,8 @@
   make:
     chdir: /home/zeek/{{ zeek_ver }}
     target: install
+    params:
+      NUM_THREADS: 4
   become_user: zeek
   when: "'manager' in group_names"
   async: 1000
