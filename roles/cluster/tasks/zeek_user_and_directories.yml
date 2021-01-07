@@ -1,0 +1,32 @@
+---
+- name: create zeek user and group
+  user:
+    name: zeek
+    shell: /bin/bash
+    home: /home/zeek
+
+- name: create dependent directories
+  file:
+    path: 
+      - "{{ item.zeekpath }}"
+      - "{{ item.logpath }}"
+    owner: zeek
+    group: zeek
+    state: directory
+  with_items: "{{ paths }}"
+
+- name: copy sudoers file for zeek nonroot user
+  copy:
+    src: zeek_sudoer
+    dest: /etc/sudoers.d/
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: extract zeek to /home/zeek
+  unarchive:
+    src: "{{ zeek_ver }}.tar.gz"
+    dest: /home/zeek
+    owner: zeek
+    group: zeek
+  when: "'manager' in group_names"

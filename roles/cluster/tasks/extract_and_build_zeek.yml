@@ -1,0 +1,17 @@
+---
+- name: configure zeek source
+  command: "./configure --with-pcap=/usr/local/lib --with-geoip=/usr/share/GeoIP/ --prefix={{ item.zeekpath }} --logdir={{ item.logpath }}"
+  args:
+    chdir: /home/zeek/{{ zeek_ver }}
+  become_user: zeek
+  with_items: "{{ paths }}"
+  when: "'manager' in group_names"
+
+- name: install zeek. feel free to grab a cup of coffee, we could be here a while.
+  make:
+    chdir: /home/zeek/{{ zeek_ver }}
+    target: install
+    params:
+      NUM_THREADS: 4
+  become_user: zeek
+  when: "'manager' in group_names"

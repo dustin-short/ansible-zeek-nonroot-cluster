@@ -1,5 +1,6 @@
 [manager]
 homelab-zeek
+10.0.0.55
 
 [worker]
 
