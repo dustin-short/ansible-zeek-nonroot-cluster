@@ -4,7 +4,7 @@
   vars:
     - zeek_ver: zeek-3.2.3
     - paths:
-        - /zeek #log path
-        - /opt/zeek #zeek path
+        - logpath: /zeek
+          zeekpath: /opt/zeek
   roles:
     - cluster 

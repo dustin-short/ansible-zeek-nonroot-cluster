@@ -27,7 +27,9 @@
 
 - name: create dependent directories
   file:
-    path: "{{ item }}"
+    path: 
+      - "{{ item.zeekpath }}"
+      - "{{ item.logpath }}"
     owner: zeek
     group: zeek
     state: directory
@@ -50,14 +52,14 @@
   when: "'manager' in group_names"
 
 - name: configure zeek source
-  command: "./configure --with-pcap=/usr/local/lib --with-geoip=/usr/share/GeoIP/ --prefix={{ item.2 }} --logdir={{ item.1 }}"
+  command: "./configure --with-pcap=/usr/local/lib --with-geoip=/usr/share/GeoIP/ --prefix={{ item.zeekpath }} --logdir={{ item.logpath }}"
   args:
     chdir: /home/zeek/{{ zeek_ver }}
   become_user: zeek
   with_items: "{{ paths }}"
   when: "'manager' in group_names"
 
-- name: install zeek
+- name: install zeek. feel free to grab a cup of coffee, we could be here a while.
   make:
     chdir: /home/zeek/{{ zeek_ver }}
     target: install
@@ -65,15 +67,3 @@
       NUM_THREADS: 4
   become_user: zeek
   when: "'manager' in group_names"
-  async: 3600
-  poll: 0
-  register: make_zeek
-
-- name: check on install zeek task
-  async_status:
-    jid: "{{ make_zeek.ansible_job_id }}"
-  become_user: zeek
-  register: job_result
-  until: job_result.finished
-  retries: 360
-  delay: 10
