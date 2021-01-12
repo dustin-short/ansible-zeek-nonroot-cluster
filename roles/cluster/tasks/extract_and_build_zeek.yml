@@ -1,17 +1,43 @@
 ---
-- name: configure zeek source
-  command: "./configure --with-pcap=/usr/local/lib --with-geoip=/usr/share/GeoIP/ --prefix={{ item.zeekpath }} --logdir={{ item.logpath }}"
-  args:
-    chdir: /home/zeek/{{ zeek_ver }}
-  become_user: zeek
+- name: Check if zeek_ver is installed
+  shell: "grep {{ zeek_ver }} {{ item.zeekpath }}/bin/zeek-config | wc -l"
+  ignore_errors: yes
+  register: checkversion
   with_items: "{{ paths }}"
-  when: "'manager' in group_names"
 
-- name: install zeek. feel free to grab a cup of coffee, we could be here a while.
-  make:
-    chdir: /home/zeek/{{ zeek_ver }}
-    target: install
-    params:
-      NUM_THREADS: 4
-  become_user: zeek
-  when: "'manager' in group_names"
+- name: debug checkversion
+  debug: 
+    msg: "{{ item.stdout }}"
+  with_items: "{{ checkversion.results }}"
+
+- name: create checkversion fact
+  set_fact: 
+    checkversion_var: "{{ item.stdout }}"
+  with_items: "{{ checkversion.results }}"
+
+- name: the block is hot. extract, configure, and install zeek
+  block:
+    - name: extract zeek to /home/zeek
+      unarchive:
+        src: "{{ zeek_ver }}.tar.gz"
+        dest: /home/zeek
+        owner: zeek
+        group: zeek
+
+    - name: configure zeek source
+      command: "./configure --with-pcap=/usr/local/lib --with-geoip=/usr/share/GeoIP/ --prefix={{ item.zeekpath }} --logdir={{ item.logpath }}"
+      args:
+        chdir: /home/zeek/{{ zeek_ver }}
+      become_user: zeek
+      with_items: "{{ paths }}"
+ 
+    - name: install zeek. feel free to grab a cup of coffee, we could be here a while.
+      make:
+        chdir: /home/zeek/{{ zeek_ver }}
+        target: install
+      params:
+        NUM_THREADS: 4
+      become_user: zeek
+  when: 
+    - "'manager' in group_names"
+    - checkversion_var == "0"

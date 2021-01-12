@@ -22,11 +22,3 @@
     owner: root
     group: root
     mode: '0644'
-
-- name: extract zeek to /home/zeek
-  unarchive:
-    src: "{{ zeek_ver }}.tar.gz"
-    dest: /home/zeek
-    owner: zeek
-    group: zeek
-  when: "'manager' in group_names"
