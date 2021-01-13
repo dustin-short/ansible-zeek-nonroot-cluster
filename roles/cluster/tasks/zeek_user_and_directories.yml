@@ -5,11 +5,20 @@
     shell: /bin/bash
     home: /home/zeek
 
-- name: create dependent directories
+- name: display the var paths
+  debug: var=paths
+
+- name: create dependent directory for zeek
   file:
-    path: 
-      - "{{ item.zeekpath }}"
-      - "{{ item.logpath }}"
+    path: "{{ item.zeekpath }}"
+    owner: zeek
+    group: zeek
+    state: directory
+  with_items: "{{ paths }}"
+
+- name: create dependent directory for zeek logging
+  file:
+    path: "{{ item.logpath }}"
     owner: zeek
     group: zeek
     state: directory
