@@ -11,4 +11,4 @@ paths:
     zeekpath: /opt/zeek
 
 ## Specify how many CPU cores you want to allow to be used for building zeek from source
-cpu_cores: 4
+cpu_cores: "{{ ansible_processor_count }}"
