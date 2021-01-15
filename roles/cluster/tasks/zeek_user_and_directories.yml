@@ -1,9 +1,9 @@
 ---
-- name: create zeek user and group
+- name: create {{ zeek_user }} and group
   user:
-    name: zeek
+    name: "{{ zeek_user }}"
     shell: /bin/bash
-    home: /home/zeek
+    home: "/home/{{ zeek_user }}"
 
 - name: display the var paths
   debug: var=paths
@@ -11,21 +11,21 @@
 - name: create dependent directory for zeek
   file:
     path: "{{ item.zeekpath }}"
-    owner: zeek
-    group: zeek
+    owner: "{{ zeek_user }}"
+    group: "{{ zeek_user }}"
     state: directory
   with_items: "{{ paths }}"
 
 - name: create dependent directory for zeek logging
   file:
     path: "{{ item.logpath }}"
-    owner: zeek
-    group: zeek
+    owner: "{{ zeek_user }}"
+    group: "{{ zeek_user }}"
     state: directory
   with_items: "{{ paths }}"
 
 - name: copy sudoers file for zeek nonroot user
-  copy:
+  template:
     src: zeek_sudoer
     dest: /etc/sudoers.d/
     owner: root

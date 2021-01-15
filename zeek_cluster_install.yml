@@ -3,8 +3,11 @@
   become: yes
   vars:
     - zeek_ver: zeek-3.2.3
+    - zeek_user: zeek
     - paths:
         - logpath: /zeek
           zeekpath: /opt/zeek
+    - cpu_cores: 4
+
   roles:
     - cluster 

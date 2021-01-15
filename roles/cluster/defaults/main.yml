@@ -1,5 +1,14 @@
 ---
+## Zeek package version
 zeek_ver: zeek-3.2.3
+
+## User to be created and used to run zeek
+zeek_user: zeek
+
+## Install and log path for zeek
 paths:
   - logpath: /zeek
     zeekpath: /opt/zeek
+
+## Specify how many CPU cores you want to allow to be used for building zeek from source
+cpu_cores: 4
