@@ -5,3 +5,5 @@
 - include_tasks: zeek_user_and_directories.yml
 
 - include_tasks: extract_and_build_zeek.yml
+
+- include_tasks: install_and_configure_geoipupdate.yml

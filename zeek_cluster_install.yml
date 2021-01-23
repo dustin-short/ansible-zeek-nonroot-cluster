@@ -4,6 +4,8 @@
   vars:
     - zeek_ver: zeek-3.2.3
     - zeek_user: zeek
+    - geoip_account: #geoip_account_number
+    - geoip_license: #geoip_license
     - paths:
         - logpath: /zeek
           zeekpath: /opt/zeek

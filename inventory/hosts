@@ -1,6 +1,5 @@
 [manager]
-homelab-zeek
-172.16.180.78
+dustintest
 
 [worker]
 
