@@ -2,11 +2,13 @@
 - name: Add maxmind ppa
   apt_repository:
     repo: ppa:maxmind/ppa
+  when: "'manager' in group_names"
 
 - name: install geoipupdate
   apt:
     name: geoipupdate
     update_cache: yes
+  when: "'manager' in group_names"
 
 - name: update GeoIP.conf
   template:
@@ -15,6 +17,8 @@
      owner: root
      group: root
      mode: '0644'
+  when: "'manager' in group_names"
+
 - name: configure geoipupdate cron on wednesday morning
   cron:
     name: weekly geo ip database update
@@ -23,3 +27,8 @@
     hour: '3'
     minute: '0'
     job: geoipupdate
+  when: "'manager' in group_names"
+
+- name: run geoipupdate
+  command: geoipupdate
+  when: "'manager' in group_names"
