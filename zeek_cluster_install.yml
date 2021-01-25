@@ -1,11 +1,13 @@
 ---
 - hosts: all
   become: yes
+  vars_files:
+    - 'vault/geoip.yml'
   vars:
     - zeek_ver: zeek-3.2.3
     - zeek_user: zeek
-    - geoip_account: #geoip_account_number
-    - geoip_license: #geoip_license
+    - geoip_account: '{{ geoip_account_vault }}'
+    - geoip_license: '{{ geoip_license_vault }}'
     - paths:
         - logpath: /zeek
           zeekpath: /opt/zeek
