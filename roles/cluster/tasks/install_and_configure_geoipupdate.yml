@@ -1,8 +1,22 @@
 ---
-- name: Add maxmind ppa
-  apt_repository:
+- name: Add maxmind ppa using proxy
+  ansible.builtin.apt_repository:
     repo: ppa:maxmind/ppa
-  when: "'manager' in group_names"
+    update_cache: yes
+  environment:
+    http_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
+    https_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
+  when: 
+    - "'manager' in group_names"
+    - use_proxy
+
+- name: Add maxmind ppa
+  ansible.builtin.apt_repository:
+    repo: ppa:maxmind/ppa
+    update_cache: yes
+  when: 
+    - "'manager' in group_names"
+    - not use_proxy
 
 - name: install geoipupdate
   apt:
@@ -12,14 +26,27 @@
 
 - name: update GeoIP.conf
   template:
-     src: GeoIP.conf
-     dest: /etc/GeoIP.conf
-     owner: root
-     group: root
-     mode: '0644'
-  when: "'manager' in group_names"
+    src: GeoIP.conf-proxy
+    dest: /etc/GeoIP.conf
+    owner: root
+    group: root
+    mode: '0644'
+  when: 
+    - "'manager' in group_names"
+    - use_proxy
 
-- name: configure geoipupdate cron on wednesday morning
+- name: update GeoIP.conf
+  template:
+    src: GeoIP.conf
+    dest: /etc/GeoIP.conf
+    owner: root
+    group: root
+    mode: '0644'
+  when: 
+    - "'manager' in group_names"
+    - not use_proxy
+
+- name: configure geoipupdate cron to run on wednesday morning
   cron:
     name: weekly geo ip database update
     user: root

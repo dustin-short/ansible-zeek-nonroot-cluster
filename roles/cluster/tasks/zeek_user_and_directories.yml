@@ -1,33 +1,66 @@
 ---
-- name: create {{ zeek_user }} and group
+- name: create zeek user and group
   user:
-    name: "{{ zeek_user }}"
+    name: zeek
     shell: /bin/bash
-    home: "/home/{{ zeek_user }}"
+    home: /home/zeek
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
 
-- name: display the var paths
-  debug: var=paths
+- name: update zeek PATH
+  lineinfile:
+    path: /home/zeek/.bashrc
+    insertafter: EOF
+    line: PATH={{ zeekdir }}/zeek/bin:$PATH
 
-- name: create dependent directory for zeek
+- name: create dependent directory for zeekdir
   file:
-    path: "{{ item.zeekpath }}"
-    owner: "{{ zeek_user }}"
-    group: "{{ zeek_user }}"
+    path: "{{ zeekdir }}"
+    owner: zeek
+    group: zeek
     state: directory
-  with_items: "{{ paths }}"
+    recurse: yes
 
-- name: create dependent directory for zeek logging
+- name: create logs directory for logdir
   file:
-    path: "{{ item.logpath }}"
-    owner: "{{ zeek_user }}"
-    group: "{{ zeek_user }}"
+    path: 
+       - "{{ logdir }}/zeek"
+    owner: zeek
+    group: zeek
     state: directory
-  with_items: "{{ paths }}"
+    recurse: yes
 
 - name: copy sudoers file for zeek nonroot user
-  template:
+  copy:
     src: zeek_sudoer
-    dest: /etc/sudoers.d/
+    dest: /etc/sudoers.d/zeek
     owner: root
     group: root
     mode: '0644'
+
+- name: copy ssh priv key to zeek user .ssh dir
+  copy:
+    src: id_rsa
+    dest: /home/zeek/.ssh/id_rsa
+    owner: zeek
+    group: zeek
+    mode: '0600'
+  become_user: zeek
+  when:
+    - "'manager' in group_names"
+
+- name: copy ssh pub key to zeek user .ssh dir
+  copy:
+    src: id_rsa.pub
+    dest: /home/zeek/.ssh/id_rsa.pub
+    owner: zeek
+    group: zeek
+    mode: '0644'
+  when:
+    - "'manager' in group_names"
+
+- name: set authorized key for zeek user on all servers
+  authorized_key:
+    user: zeek
+    state: present
+    key: "{{ lookup('file', 'roles/cluster/files/id_rsa.pub') }}"

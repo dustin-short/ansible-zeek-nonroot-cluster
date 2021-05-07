@@ -1,0 +1,18 @@
+---
+- name: ufw enable
+  ufw:
+    state: enabled
+    policy: allow
+
+- name:  ufw allow ports in
+  ufw:
+    rule: allow 
+    port: "{{item.port}}"
+    proto: "{{ item.proto | default('any') }}"
+    direction: in
+  with_items: "{{ ports_allowed }}"
+
+- name: ufw deny inbound
+  ufw:
+    policy: deny
+    direction: incoming

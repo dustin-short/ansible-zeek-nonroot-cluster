@@ -1,0 +1,73 @@
+---
+- name: install zkg using proxy
+  pip:
+    name: zkg
+    executable: /usr/bin/pip3
+  environment:
+    http_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
+    https_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
+  when:
+    - "'manager' in group_names"
+    - use_proxy
+
+- name: autoconfig zkg using proxy
+  command: zkg --user autoconfig
+  become_user: zeek
+  environment:
+    http_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
+    https_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
+  when:
+    - "'manager' in group_names"
+    - use_proxy
+
+- name: install zkg
+  pip:
+    name: zkg
+    executable: /usr/bin/pip3
+  when:
+    - "'manager' in group_names"
+    - not use_proxy
+
+- name: autoconfig zkg
+  command: zkg --user autoconfig
+  become_user: zeek
+  when:
+    - "'manager' in group_names"
+    - not use_proxy
+
+- name: autoconfig zkg
+  template:
+    src: zkg_config
+    dest: /home/zeek/.zkg/config
+  become_user: zeek
+  when:
+    - "'manager' in group_names"
+
+- name: install zkg_packages using proxy
+  command: zkg --user install '{{ item }}' --force
+  become_user: zeek
+  environment:
+    http_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
+    https_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
+  with_items:
+    - '{{ zkg_packages }}'
+  when:
+    - "'manager' in group_names"
+    - use_proxy
+
+- name: install zkg_packages
+  command: zkg --user install '{{ item }}' --force
+  become_user: zeek
+  with_items:
+    - '{{ zkg_packages }}'
+  when:
+    - "'manager' in group_names"
+    - not use_proxy
+
+- name: uncomment load packages in local.zeek
+  lineinfile:
+    path: "{{ zeekdir }}/zeek/share/zeek/site/local.zeek"
+    line: "@load packages"
+    regexp: ^# @load packages
+  when:
+    - "'manager' in group_names"

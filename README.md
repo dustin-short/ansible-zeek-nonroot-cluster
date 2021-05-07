@@ -1,34 +1,70 @@
 # ansible-zeek-nonroot-cluster
 
 Ansible role that installs [Zeek](https://zeek.org/) (formerly Bro) and configures it to run as a non-root user
+
 ## Requirements
 
-***None***
+None.
+
+## Encrypted with vault
+        - roles/cluster/files/id.rsa
+        - vault/geoip_vars.yml
+            - contains the following variables for geo maxmind template
+                - geoip_account
+                - geoip_license
 
 ## Role Variables
-***Zeek Version*** 
-
-Zeek package version minus the file extention
+Zeek Version
     
-    zeek_ver: zeek-3.2.3
+    zeek_ver: zeek-4.0.0
+        -   Use the name of the zeek package minus the file extention
+    repo_branch: release/4.0
+        -   Use this variable to grab the correct branch from zeek GitHub Repository
 
+Digest Salt
 
-***Zeek User***
+	- digest_salt: custom string
 
-User to be created and used to run zeek
+Enable json output ```set to yes to write logs as json instead of TSV```
 
-    zeek_user: zeek
+	- enable_json: no
 
+zkg packages to install
 
-***Zeek paths***
+        - bzar
+        - ja3
 
-Install and log path for zeek
+Zeek Directories
 
-        - logpath: /zeek
-        - zeekpath: /opt/zeek
+        - logdir: /zeek
+        - zeekdir: /opt
 
-***CPU Cores***
+Zeek Ports allowed on host base firewall ufw ```ssh and splunk ports added to ensure they are allowed```
+        
+        - port: ssh
+        - port: 9997
+          proto: tcp
+        - port: 9996
+          proto: tcp
+        - port: 8000
+          proto: tcp
+        - port: 8089
+          proto: tcp
+        - port: 47760
+          proto: tcp
+        - port: 47761
+          proto: tcp
+        - port: 47762
+          proto: tcp
+        - port: 47763
+          proto: tcp
+        - port: 47764
+          proto: tcp
+        - port: 47765
+          proto: tcp
 
-Specify how many CPU cores you want to allow to be used for building zeek from source. Defaults to system cpu count
+Proxy Variables ```by setting use_proxy to yes all connections to the internet will use proxy```
 
-    cpu_cores: 4
+        - use_proxy: yes
+        - proxy_ip: x.x.x.x
+        - proxy_port: 3128

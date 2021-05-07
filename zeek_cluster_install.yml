@@ -2,16 +2,46 @@
 - hosts: all
   become: yes
   vars_files:
-    - 'vault/geoip.yml'
+    - vault/geoip_vars.yml
   vars:
-    - zeek_ver: zeek-3.2.3
-    - zeek_user: zeek
-    - geoip_account: '{{ geoip_account_vault }}'
-    - geoip_license: '{{ geoip_license_vault }}'
-    - paths:
-        - logpath: /zeek
-          zeekpath: /opt/zeek
-    - cpu_cores: 4
+    - use_proxy: no
+    - proxy_ip: x.x.x.x
+    - proxy_port: 3128
+    - zeek_ver: zeek-4.0.1
+      # select the branch version of zeek to install      
+    - repo_branch: 'release/4.0'
+    - digest_salt: h3ll0fr3ind
+    - enable_json: yes  
+    - logdir: /zeek
+    - zeekdir: /opt
 
+    # UFW variables
+    - ports_allowed:
+      - port: ssh
+      - port: 9997
+        proto: tcp
+      - port: 9996
+        proto: tcp
+      - port: 8000
+        proto: tcp
+      - port: 8089
+        proto: tcp
+      - port: 47760
+        proto: tcp
+      - port: 47761
+        proto: tcp
+      - port: 47762
+        proto: tcp
+      - port: 47763
+        proto: tcp
+      - port: 47764
+        proto: tcp
+      - port: 47765
+        proto: tcp
+    # END UFW variables
+
+    - zkg_packages:
+        - ja3
+        - bzar
   roles:
     - cluster 

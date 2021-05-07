@@ -1,9 +1,16 @@
 ---
 - include_tasks: dependencies.yml
   when: ansible_distribution == "Ubuntu"
+
+- include_tasks: configure_ufw.yml
+  when: ansible_distribution == "Ubuntu"
   
 - include_tasks: zeek_user_and_directories.yml
 
-- include_tasks: extract_and_build_zeek.yml
+- include_tasks: clone_and_build_zeek.yml
 
 - include_tasks: install_and_configure_geoipupdate.yml
+
+- include_tasks: configure_zeek.yml
+
+- include_tasks: zkg_package_manager.yml

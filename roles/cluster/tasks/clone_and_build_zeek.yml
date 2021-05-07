@@ -1,0 +1,128 @@
+---
+- name: Check if zeek_ver is installed
+  shell: "grep {{ zeek_ver }} {{ zeekdir }}/zeek/bin/zeek-config | wc -l"
+  #  ignore_errors: yes
+  register: checkversion
+  become_user: zeek
+
+- name: debug checkversion
+  debug: 
+    var: "{{ checkversion }}"
+
+- name: create checkversion fact
+  set_fact: 
+    checkversion_var: "{{ checkversion.stdout }}"
+
+- name: comment out client alive interval in sshd_config
+  lineinfile:
+     path: /etc/ssh/sshd_config
+     regexp: '^ClientAliveInterval\s600'
+     line: '#ClientAliveInterval 600'
+  when: 
+    - "'manager' in group_names"
+    - checkversion_var == "0"
+
+- name: comment out client alive count max in sshd_config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^ClientAliveCountMax\s1'
+    line: '#ClientAliveCountMax 1'
+  when: 
+   - "'manager' in group_names"
+   - checkversion_var == "0"
+
+- name: reload sshd
+  command: systemctl reload sshd
+  when: 
+    - "'manager' in group_names"
+    - checkversion_var == "0"
+
+- name: clone zeek from github to /home/zeek
+  ansible.builtin.git:
+    repo: https://github.com/zeek/zeek.git
+    version:
+    dest: /home/zeek/{{ zeek_ver }}
+    version: '{{ repo_branch }}'
+  become_user: zeek
+  when: 
+    - "'manager' in group_names"
+    - checkversion_var == "0"
+    - not use_proxy
+
+- name: clone zeek from github to /home/zeek using proxy
+  ansible.builtin.git:
+    repo: https://github.com/zeek/zeek.git
+    version:
+    dest: /home/zeek/{{ zeek_ver }}
+    version: '{{ repo_branch }}'
+  become_user: zeek
+  environment:
+     http_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
+     https_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
+  when: 
+    - "'manager' in group_names"
+    - checkversion_var == "0"
+    - use_proxy
+
+- name: configure zeek source
+  command: "./configure --with-pcap=/usr/local/lib --with-geoip=/usr/share/GeoIP/ --prefix={{ zeekdir }}/zeek --logdir={{ logdir }}/zeek"
+  args:
+    chdir: /home/zeek/{{ zeek_ver }}
+  become_user: zeek
+  when: 
+    - "'manager' in group_names"
+    - checkversion_var == "0"
+
+- name: install zeek
+  make:
+    chdir: /home/zeek/{{ zeek_ver }}
+    target: install
+  when: 
+    - "'manager' in group_names"
+    - checkversion_var == "0"
+
+- name: comment out client alive interval in sshd_config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#ClientAliveInterval\s600'
+    line: 'ClientAliveInterval 600'
+  when: 
+    - "'manager' in group_names"
+    - checkversion_var == "0"
+
+- name: comment out client alive count max in sshd_config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#ClientAliveCountMax\s1'
+    line: 'ClientAliveCountMax 1'
+  when: 
+    - "'manager' in group_names"
+    - checkversion_var == "0"
+
+- name: reload sshd
+  command: systemctl reload sshd
+  when: 
+    - "'manager' in group_names"
+    - checkversion_var == "0"
+
+- name: set perms for zeekdir
+  file:
+    path: "{{ zeekdir }}"
+    owner: zeek
+    group: zeek
+    state: directory
+    recurse: yes
+  when: 
+    - "'manager' in group_names"
+    - checkversion_var == "0"
+
+- name: set perms for logdir
+  file:
+    path: "{{ logdir }}"
+    owner: zeek
+    group: zeek
+    state: directory
+    recurse: yes
+  when: 
+    - "'manager' in group_names"
+    - checkversion_var == "0"
