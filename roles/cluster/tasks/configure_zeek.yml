@@ -6,17 +6,17 @@
     owner: zeek
     group: zeek
     mode: '0640'
-  when: 
+  when:
     - "'manager' in group_names"
 
 - name: Append zeekctl plugin lines to zeekctl.cfg
   blockinfile:
-     path: "{{ zeekdir }}/zeek/etc/zeekctl.cfg"
-     block:  |
-       setcap.enabled=1
-       setcap.command=sudo /sbin/setcap cap_net_raw,cap_net_admin=eip /opt/zeek/bin/zeek && sudo /sbin/setcap cap_net_raw,cap_net_admin=eip /opt/zeek/bin/capstats
-     insertafter: EOF
-  when: 
+    path: "{{ zeekdir }}/zeek/etc/zeekctl.cfg"
+    block: |
+      setcap.enabled=1
+      setcap.command=sudo /sbin/setcap cap_net_raw,cap_net_admin=eip /opt/zeek/bin/zeek && sudo /sbin/setcap cap_net_raw,cap_net_admin=eip /opt/zeek/bin/capstats
+    insertafter: EOF
+  when:
     - "'manager' in group_names"
 
 - name: create node.cfg
@@ -26,25 +26,25 @@
     owner: zeek
     group: zeek
     mode: '0640'
-  with_nested: 
+  with_nested:
     - '{{ node_configuration }}'
     - '{{ worker_node_configuration }}'
-  when: 
+  when:
     - "'manager' in group_names"
 
 - name: update digest_salt
   lineinfile:
-     path: "{{ zeekdir }}/zeek/share/zeek/site/local.zeek"
-     line: 'redef digest_salt = "{{ digest_salt }}";'
-     regexp: ^redef\sdigest_salt\s=
-  when: 
+    path: "{{ zeekdir }}/zeek/share/zeek/site/local.zeek"
+    line: 'redef digest_salt = "{{ digest_salt }}";'
+    regexp: ^redef\sdigest_salt\s=
+  when:
     - "'manager' in group_names"
 
 - name: enable json output
   lineinfile:
-     path: "{{ zeekdir }}/zeek/share/zeek/site/local.zeek"
-     line: "@load policy/tuning/json-logs.zeek"
-  when: 
+    path: "{{ zeekdir }}/zeek/share/zeek/site/local.zeek"
+    line: "@load policy/tuning/json-logs.zeek"
+  when:
     - "'manager' in group_names"
     - "enable_json"
 

@@ -6,7 +6,7 @@
   environment:
     http_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
     https_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
-  when: 
+  when:
     - "'manager' in group_names"
     - use_proxy
 
@@ -14,7 +14,7 @@
   ansible.builtin.apt_repository:
     repo: ppa:maxmind/ppa
     update_cache: yes
-  when: 
+  when:
     - "'manager' in group_names"
     - not use_proxy
 
@@ -31,7 +31,7 @@
     owner: root
     group: root
     mode: '0644'
-  when: 
+  when:
     - "'manager' in group_names"
     - use_proxy
 
@@ -42,7 +42,7 @@
     owner: root
     group: root
     mode: '0644'
-  when: 
+  when:
     - "'manager' in group_names"
     - not use_proxy
 

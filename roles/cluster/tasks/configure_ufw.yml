@@ -4,9 +4,9 @@
     state: enabled
     policy: allow
 
-- name:  ufw allow ports in
+- name: ufw allow ports in
   ufw:
-    rule: allow 
+    rule: allow
     port: "{{item.port}}"
     proto: "{{ item.proto | default('any') }}"
     direction: in

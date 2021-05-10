@@ -37,8 +37,8 @@
     version: '{{ repo_branch }}'
   become_user: zeek
   environment:
-     http_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
-     https_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
+    http_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
+    https_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
   when:
     - "'manager' in group_names"
     - checkversion_var == "0"
@@ -49,7 +49,7 @@
   args:
     chdir: /home/zeek/{{ zeek_ver }}
   become_user: zeek
-  when: 
+  when:
     - "'manager' in group_names"
     - checkversion_var == "0"
 
@@ -63,7 +63,7 @@
 
 - name: reload sshd
   command: systemctl reload sshd
-  when: 
+  when:
     - "'manager' in group_names"
     - checkversion_var == "0"
 
@@ -74,7 +74,7 @@
     group: zeek
     state: directory
     recurse: yes
-  when: 
+  when:
     - "'manager' in group_names"
     - checkversion_var == "0"
 
@@ -85,6 +85,6 @@
     group: zeek
     state: directory
     recurse: yes
-  when: 
+  when:
     - "'manager' in group_names"
     - checkversion_var == "0"
