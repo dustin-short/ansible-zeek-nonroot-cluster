@@ -60,3 +60,26 @@ Proxy Variables ```by setting use_proxy to yes all connections to the internet w
         - use_proxy: yes
         - proxy_ip: x.x.x.x
         - proxy_port: 3128
+
+Node.cfg configuration ```node.cfg is built using a jinja2 for loop. This allows you to add as many nodes as needed in the format below to create the node configuration.```
+
+        - node_configuration:
+          - name: zeek-manager
+            type: manager
+            host: localhost
+          - name: zeek-proxy
+            type: proxy
+            host: localhost
+          - name: zeek-logger
+            type: logger
+            host: localhost
+        - worker_node_configuration:
+          - name: zeek-worker-1
+            pfring_interface: enp1s0f0
+            worker_threads: 3
+            host: localhost
+          - name: zeek-worker-2
+            pfring_interface: enp1s0f0
+            worker_threads: 3
+            host: localhost
+
