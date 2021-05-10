@@ -33,7 +33,6 @@
 - name: clone zeek from github to /home/zeek using proxy
   ansible.builtin.git:
     repo: https://github.com/zeek/zeek.git
-    version:
     dest: /home/zeek/{{ zeek_ver }}
     version: '{{ repo_branch }}'
   become_user: zeek
