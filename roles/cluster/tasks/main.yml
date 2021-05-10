@@ -4,7 +4,7 @@
 
 - include_tasks: configure_ufw.yml
   when: ansible_distribution == "Ubuntu"
-  
+
 - include_tasks: zeek_user_and_directories.yml
 
 - include_tasks: clone_and_build_zeek.yml

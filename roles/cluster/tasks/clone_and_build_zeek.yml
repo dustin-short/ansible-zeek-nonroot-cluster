@@ -6,27 +6,26 @@
   become_user: zeek
 
 - name: debug checkversion
-  debug: 
+  debug:
     var: "{{ checkversion }}"
 
 - name: create checkversion fact
-  set_fact: 
+  set_fact:
     checkversion_var: "{{ checkversion.stdout }}"
 
 - name: reload sshd
   command: systemctl reload sshd
-  when: 
+  when:
     - "'manager' in group_names"
     - checkversion_var == "0"
 
 - name: clone zeek from github to /home/zeek
   ansible.builtin.git:
     repo: https://github.com/zeek/zeek.git
-    version:
     dest: /home/zeek/{{ zeek_ver }}
     version: '{{ repo_branch }}'
   become_user: zeek
-  when: 
+  when:
     - "'manager' in group_names"
     - checkversion_var == "0"
     - not use_proxy
@@ -41,7 +40,7 @@
   environment:
      http_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
      https_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
-  when: 
+  when:
     - "'manager' in group_names"
     - checkversion_var == "0"
     - use_proxy
@@ -59,7 +58,7 @@
   make:
     chdir: /home/zeek/{{ zeek_ver }}
     target: install
-  when: 
+  when:
     - "'manager' in group_names"
     - checkversion_var == "0"
 
