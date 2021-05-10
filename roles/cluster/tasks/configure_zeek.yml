@@ -19,6 +19,19 @@
   when: 
     - "'manager' in group_names"
 
+- name: create node.cfg
+  template:
+    src: node.cfg
+    dest: /opt/zeek/etc/node.cfg
+    owner: zeek
+    group: zeek
+    mode: '0640'
+  with_nested: 
+    - '{{ node_configuration }}'
+    - '{{ worker_node_configuration }}'
+  when: 
+    - "'manager' in group_names"
+
 - name: update digest_salt
   lineinfile:
      path: "{{ zeekdir }}/zeek/share/zeek/site/local.zeek"

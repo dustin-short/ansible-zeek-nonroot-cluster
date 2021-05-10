@@ -18,14 +18,6 @@
     # UFW variables
     - ports_allowed:
       - port: ssh
-      - port: 9997
-        proto: tcp
-      - port: 9996
-        proto: tcp
-      - port: 8000
-        proto: tcp
-      - port: 8089
-        proto: tcp
       - port: 47760
         proto: tcp
       - port: 47761
@@ -43,5 +35,24 @@
     - zkg_packages:
         - ja3
         - bzar
+    - node_configuration:
+        - name: zeek-manager
+          type: manager
+          host: localhost
+        - name: zeek-proxy
+          type: proxy
+          host: localhost
+        - name: zeek-logger
+          type: logger
+          host: localhost
+    - worker_node_configuration:
+        - name: zeek-worker-1
+          pfring_interface: enp1s0f0
+          worker_threads: 3
+          host: localhost
+        - name: zeek-worker-2
+          pfring_interface: enp1s0f0
+          worker_threads: 3
+          host: localhost
   roles:
     - cluster 

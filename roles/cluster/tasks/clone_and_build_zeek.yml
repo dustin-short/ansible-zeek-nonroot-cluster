@@ -13,24 +13,6 @@
   set_fact: 
     checkversion_var: "{{ checkversion.stdout }}"
 
-- name: comment out client alive interval in sshd_config
-  lineinfile:
-     path: /etc/ssh/sshd_config
-     regexp: '^ClientAliveInterval\s600'
-     line: '#ClientAliveInterval 600'
-  when: 
-    - "'manager' in group_names"
-    - checkversion_var == "0"
-
-- name: comment out client alive count max in sshd_config
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    regexp: '^ClientAliveCountMax\s1'
-    line: '#ClientAliveCountMax 1'
-  when: 
-   - "'manager' in group_names"
-   - checkversion_var == "0"
-
 - name: reload sshd
   command: systemctl reload sshd
   when: 
@@ -77,24 +59,6 @@
   make:
     chdir: /home/zeek/{{ zeek_ver }}
     target: install
-  when: 
-    - "'manager' in group_names"
-    - checkversion_var == "0"
-
-- name: comment out client alive interval in sshd_config
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    regexp: '^#ClientAliveInterval\s600'
-    line: 'ClientAliveInterval 600'
-  when: 
-    - "'manager' in group_names"
-    - checkversion_var == "0"
-
-- name: comment out client alive count max in sshd_config
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    regexp: '^#ClientAliveCountMax\s1'
-    line: 'ClientAliveCountMax 1'
   when: 
     - "'manager' in group_names"
     - checkversion_var == "0"

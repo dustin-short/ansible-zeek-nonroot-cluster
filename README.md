@@ -39,17 +39,9 @@ Zeek Directories
         - logdir: /zeek
         - zeekdir: /opt
 
-Zeek Ports allowed on host base firewall ufw ```ssh and splunk ports added to ensure they are allowed```
+Zeek Ports allowed on host base firewall ufw
         
         - port: ssh
-        - port: 9997
-          proto: tcp
-        - port: 9996
-          proto: tcp
-        - port: 8000
-          proto: tcp
-        - port: 8089
-          proto: tcp
         - port: 47760
           proto: tcp
         - port: 47761
