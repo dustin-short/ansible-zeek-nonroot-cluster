@@ -53,13 +53,29 @@
     - "'manager' in group_names"
     - checkversion_var == "0"
 
-- name: install zeek
-  make:
+- name: compile
+  command: make -j {{ ansible_processor_vcpus }}
+  args:
     chdir: /home/zeek/{{ zeek_ver }}
-    target: install
   when:
     - "'manager' in group_names"
     - checkversion_var == "0"
+
+- name: install zeek
+  command: make -j {{ ansible_processor_vcpus }} install
+  args:
+    chdir: /home/zeek/{{ zeek_ver }}
+  when:
+    - "'manager' in group_names"
+    - checkversion_var == "0"
+
+    #- name: install zeek
+#  make:
+#    chdir: /home/zeek/{{ zeek_ver }}
+#    target: install
+#  when:
+#    - "'manager' in group_names"
+#    - checkversion_var == "0"
 
 - name: reload sshd
   command: systemctl reload sshd

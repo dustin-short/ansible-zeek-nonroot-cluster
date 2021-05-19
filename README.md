@@ -57,7 +57,7 @@ Zeek Ports allowed on host base firewall ufw
 
 Proxy Variables ```by setting use_proxy to yes all connections to the internet will use proxy```
 
-        - use_proxy: yes
+        - use_proxy: no
         - proxy_ip: x.x.x.x
         - proxy_port: 3128
 

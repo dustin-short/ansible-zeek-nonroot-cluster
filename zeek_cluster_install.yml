@@ -47,11 +47,11 @@
           host: localhost
     - worker_node_configuration:
         - name: zeek-worker-1
-          pfring_interface: enp1s0f0
+          pfring_interface: eth0
           worker_threads: 3
           host: localhost
         - name: zeek-worker-2
-          pfring_interface: enp1s0f0
+          pfring_interface: eth0
           worker_threads: 3
           host: localhost
   roles:
