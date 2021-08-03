@@ -1,8 +1,8 @@
 ---
-- name: copy lab setcap plugin to /opt/zeek/lib/zeekctl/plugins/
+- name: copy setcap plugin to /opt/zeek/lib/zeekctl/plugins/
   copy:
     src: setcap.py
-    dest: /opt/zeek/lib/zeek/plugins/
+    dest: "{{ zeekdir }}/lib/zeek/plugins/"
     owner: zeek
     group: zeek
     mode: '0640'
@@ -11,7 +11,7 @@
 
 - name: Append zeekctl plugin lines to zeekctl.cfg
   blockinfile:
-    path: "{{ zeekdir }}/zeek/etc/zeekctl.cfg"
+    path: "{{ zeekdir }}/etc/zeekctl.cfg"
     block: |
       setcap.enabled=1
       setcap.command=sudo /sbin/setcap cap_net_raw,cap_net_admin=eip /opt/zeek/bin/zeek && sudo /sbin/setcap cap_net_raw,cap_net_admin=eip /opt/zeek/bin/capstats
@@ -19,10 +19,10 @@
   when:
     - "'manager' in group_names"
 
-- name: create node.cfg
+- name: build node.cfg from jinja2 template
   template:
     src: node.cfg
-    dest: /opt/zeek/etc/node.cfg
+    dest: "{{ zeekdir }}/etc/node.cfg"
     owner: zeek
     group: zeek
     mode: '0640'
@@ -34,15 +34,39 @@
 
 - name: update digest_salt
   lineinfile:
-    path: "{{ zeekdir }}/zeek/share/zeek/site/local.zeek"
+    path: "{{ zeekdir }}/share/zeek/site/local.zeek"
     line: 'redef digest_salt = "{{ digest_salt }}";'
     regexp: ^redef\sdigest_salt\s=
   when:
     - "'manager' in group_names"
 
+- name: set log retention in days
+  lineinfile:
+    path: "{{ zeekdir }}/etc/zeekctl.cfg"
+    line: 'LogExpireInterval = {{ LogExpireInterval }}'
+    regexp: ^LogExpireInterval\s=
+  when:
+    - "'manager' in group_names"
+
+- name: set crash log retention in days
+  lineinfile:
+    path: "{{ zeekdir }}/etc/zeekctl.cfg"
+    line: 'CrashExpireInterval = {{ CrashExpireInterval }}'
+    regexp: ^CrashExpireInterval\s=
+  when:
+    - "'manager' in group_names"
+
+- name: set stats log retention in days
+  lineinfile:
+    path: "{{ zeekdir }}/etc/zeekctl.cfg"
+    line: 'StatsLogExpireInterval = {{ StatsLogExpireInterval }}'
+    regexp: ^StatsLogExpireInterval\s=
+  when:
+    - "'manager' in group_names"
+
 - name: enable json output
   lineinfile:
-    path: "{{ zeekdir }}/zeek/share/zeek/site/local.zeek"
+    path: "{{ zeekdir }}/share/zeek/site/local.zeek"
     line: "@load policy/tuning/json-logs.zeek"
   when:
     - "'manager' in group_names"
@@ -50,7 +74,7 @@
 
 - name: create spool directory for logdir
   file:
-    path: "{{ logdir }}/zeek/spool"
+    path: "{{ spooldir }}"
     owner: zeek
     group: zeek
     state: directory
@@ -58,7 +82,7 @@
 
 - name: create logs directory for logdir
   file:
-    path: "{{ logdir }}/zeek/logs"
+    path: "{{ logdir }}"
     owner: zeek
     group: zeek
     state: directory

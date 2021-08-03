@@ -46,6 +46,7 @@
 - name: install zkg_packages using proxy
   command: zkg --user install '{{ item }}' --force
   become_user: zeek
+  ignore_errors: yes
   environment:
     http_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
     https_proxy: http://{{ proxy_ip }}:{{ proxy_port}}
@@ -58,6 +59,7 @@
 - name: install zkg_packages
   command: zkg --user install '{{ item }}' --force
   become_user: zeek
+  ignore_errors: yes
   with_items:
     - '{{ zkg_packages }}'
   when:
@@ -66,7 +68,7 @@
 
 - name: uncomment load packages in local.zeek
   lineinfile:
-    path: "{{ zeekdir }}/zeek/share/zeek/site/local.zeek"
+    path: "{{ zeekdir }}/share/zeek/site/local.zeek"
     line: "@load packages"
     regexp: ^# @load packages
   when:
