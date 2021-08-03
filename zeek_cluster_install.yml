@@ -12,8 +12,12 @@
     - repo_branch: 'release/4.0'
     - digest_salt: h3ll0fr3ind
     - enable_json: yes
-    - logdir: /zeek
-    - zeekdir: /opt
+    - logdir: /zeeklogdir
+    - zeekdir: /opt/zeek
+    - spooldir: /zeekspooldir
+    - LogExpireInterval: 14
+    - StatsLogExpireInterval: 30
+    - CrashExpireInterval: 30
 
     # UFW variables
     - ports_allowed:
@@ -35,6 +39,8 @@
     - zkg_packages:
         - ja3
         - bzar
+        - zeek-community-id
+        - hassh
     - node_configuration:
         - name: zeek-manager
           type: manager
@@ -47,12 +53,12 @@
           host: localhost
     - worker_node_configuration:
         - name: zeek-worker-1
-          pfring_interface: eth0
-          worker_threads: 3
+          pfring_interface: enp1s0f0
+          worker_threads: 2
           host: localhost
-        - name: zeek-worker-2
-          pfring_interface: eth0
-          worker_threads: 3
-          host: localhost
+#        - name: zeek-worker-2
+#          pfring_interface: eth0
+#          worker_threads: 3
+#          host: localhost
   roles:
     - cluster

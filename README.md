@@ -10,8 +10,8 @@ None.
         - roles/cluster/files/id.rsa
         - vault/geoip_vars.yml
             - contains the following variables for geo maxmind template
-                - geoip_account
-                - geoip_license
+                - geoip_account: <account number>
+                - geoip_license: <license number>
 
 ## Role Variables
 Zeek Version
@@ -33,11 +33,19 @@ zkg packages to install
 
         - bzar
         - ja3
+        - hassh
 
 Zeek Directories
 
-        - logdir: /zeek
-        - zeekdir: /opt
+        - logdir: /zeeklogdir
+        - spooldir: /zeekspooldir
+        - zeekdir: /opt/zeek
+
+Log Retention
+
+        - LogExpireInterval: 14
+        - StatsLogExpireInterval: 30
+        - CrashExpireInterval: 30
 
 Zeek Ports allowed on host base firewall ufw
         

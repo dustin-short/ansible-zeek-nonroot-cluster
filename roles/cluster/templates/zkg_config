@@ -3,6 +3,6 @@ zeek = https://github.com/zeek/packages
 
 [paths]
 state_dir = /home/zeek/.zkg
-script_dir = {{ zeekdir }}/zeek/share/zeek/site
-plugin_dir = {{ zeekdir }}/zeek/lib/zeek/plugins
+script_dir = {{ zeekdir }}/share/zeek/site
+plugin_dir = {{ zeekdir }}/lib/zeek/plugins
 zeek_dist = /home/zeek/{{ zeek_ver }}
