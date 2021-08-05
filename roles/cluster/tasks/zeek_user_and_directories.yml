@@ -46,7 +46,6 @@
   when:
     - "'manager' in group_names"
 
-
 - name: set authorized key for zeek user on all servers
   authorized_key:
     user: zeek
