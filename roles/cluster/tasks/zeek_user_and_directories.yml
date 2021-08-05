@@ -38,29 +38,17 @@
     group: root
     mode: '0644'
 
-- name: copy ssh priv key to zeek user .ssh dir
-  copy:
-    src: id_rsa
-    dest: /home/zeek/.ssh/id_rsa
-    owner: zeek
-    group: zeek
-    mode: '0600'
-  become_user: zeek
+- name: grab pub key
+    fetch:
+      dest: zeek_id_rsa.pub
+      src: /home/zeek/.ssh/id_rsa.pub
+      flat: yes
   when:
     - "'manager' in group_names"
 
-- name: copy ssh pub key to zeek user .ssh dir
-  copy:
-    src: id_rsa.pub
-    dest: /home/zeek/.ssh/id_rsa.pub
-    owner: zeek
-    group: zeek
-    mode: '0644'
-  when:
-    - "'manager' in group_names"
 
 - name: set authorized key for zeek user on all servers
   authorized_key:
     user: zeek
     state: present
-    key: "{{ lookup('file', 'roles/cluster/files/id_rsa.pub') }}"
+    key: "{{ lookup('file', 'roles/cluster/files/zeek_id_rsa.pub') }}"
