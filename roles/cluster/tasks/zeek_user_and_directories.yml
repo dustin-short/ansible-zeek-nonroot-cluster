@@ -51,4 +51,4 @@
   authorized_key:
     user: zeek
     state: present
-    key: "{{ lookup('file', 'roles/cluster/files/zeek_id_rsa.pub') }}"
+    key: "{{ lookup('file', 'zeek_id_rsa.pub') }}"
