@@ -11,7 +11,7 @@
   lineinfile:
     path: /home/zeek/.bashrc
     insertafter: EOF
-    line: PATH={{ zeekdir }}/zeek/bin:$PATH
+    line: PATH={{ zeekdir }}/bin:$PATH
 
 - name: create dependent directory for zeekdir
   file:
@@ -20,6 +20,25 @@
     group: zeek
     state: directory
     recurse: yes
+
+- name: create dependent directory for libmaxmind
+  file:
+    path: "{{ libmaxminddir }}"
+    owner: zeek
+    group: zeek
+    state: directory
+    recurse: yes
+
+- name: copy libmaxmind databases to libmaxminddir
+  copy:
+    src: '{{ item }}'
+    dest: "{{ libmaxminddir }}"
+    owner: zeek
+    group: zeek
+    mode: '0644'
+  with_items:
+    - GeoLite2-City.mmdb
+    - GeoLite2-Country.mmdb 
 
 - name: create logs directory for logdir
   file:
@@ -39,10 +58,10 @@
     mode: '0644'
 
 - name: grab pub key
-    fetch:
-      dest: zeek_id_rsa.pub
-      src: /home/zeek/.ssh/id_rsa.pub
-      flat: yes
+  fetch:
+    dest: zeek_id_rsa.pub
+    src: /home/zeek/.ssh/id_rsa.pub
+    flat: yes
   when:
     - "'manager' in group_names"
 

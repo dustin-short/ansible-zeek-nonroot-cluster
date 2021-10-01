@@ -29,8 +29,11 @@
     - not use_proxy
 
 - name: autoconfig zkg
-  command: zkg --user autoconfig
+  shell: /opt/zeek/bin/zkg --user autoconfig
   become_user: zeek
+  args:
+    chdir: /home/zeek
+  ignore_errors: yes
   when:
     - "'manager' in group_names"
     - not use_proxy

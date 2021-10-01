@@ -9,8 +9,6 @@
 
 - include_tasks: clone_and_build_zeek.yml
 
-- include_tasks: install_and_configure_geoipupdate.yml
-
 - include_tasks: configure_zeek.yml
 
 - include_tasks: zkg_package_manager.yml

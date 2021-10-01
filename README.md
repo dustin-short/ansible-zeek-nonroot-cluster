@@ -6,17 +6,10 @@ Ansible role that installs [Zeek](https://zeek.org/) (formerly Bro) and configur
 
 None.
 
-## Encrypted with vault
-        - roles/cluster/files/id.rsa
-        - vault/geoip_vars.yml
-            - contains the following variables for geo maxmind template
-                - geoip_account: <account number>
-                - geoip_license: <license number>
-
 ## Role Variables
 Zeek Version
     
-    zeek_ver: zeek-4.0.0
+    zeek_ver: zeek-4.0.4
         -   Use the name of the zeek package minus the file extention
     repo_branch: release/4.0
         -   Use this variable to grab the correct branch from zeek GitHub Repository

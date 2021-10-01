@@ -1,13 +1,11 @@
 ---
 - hosts: all
   become: yes
-  vars_files:
-    - vault/geoip_vars.yml
   vars:
     - use_proxy: no
     - proxy_ip: x.x.x.x
     - proxy_port: 3128
-    - zeek_ver: zeek-4.0.1
+    - zeek_ver: zeek-4.0.4
       # select the branch version of zeek to install
     - repo_branch: 'release/4.0'
     - digest_salt: h3ll0fr3ind
@@ -15,6 +13,7 @@
     - logdir: /zeeklogdir
     - zeekdir: /opt/zeek
     - spooldir: /zeekspooldir
+    - libmaxminddir: /usr/share/GeoIP/
     - LogExpireInterval: 14
     - StatsLogExpireInterval: 30
     - CrashExpireInterval: 30
@@ -44,18 +43,18 @@
     - node_configuration:
         - name: zeek-manager
           type: manager
-          host: localhost
+          host: 10.10.10.8
         - name: zeek-proxy
           type: proxy
-          host: localhost
+          host: 10.10.10.8
         - name: zeek-logger
           type: logger
-          host: localhost
+          host: 10.10.10.8
     - worker_node_configuration:
         - name: zeek-worker-1
           pfring_interface: enp1s0f0
           worker_threads: 2
-          host: localhost
+          host: 10.10.10.79
 #        - name: zeek-worker-2
 #          pfring_interface: eth0
 #          worker_threads: 3
