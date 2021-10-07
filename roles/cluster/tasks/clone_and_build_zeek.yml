@@ -45,7 +45,7 @@
     - use_proxy
 
 - name: configure zeek source
-  command: "./configure --with-pcap=/usr/local/lib --with-geoip={{ libmaxminddir }} --prefix={{ zeekdir }} --logdir={{ logdir }} --spooldir={{ spooldir }}"
+  command: "./configure --enable-perftools --with-pcap=/usr/local/lib --with-geoip={{ libmaxminddir }} --prefix={{ zeekdir }} --logdir={{ logdir }} --spooldir={{ spooldir }}"
   args:
     chdir: /home/zeek/{{ zeek_ver }}
   become_user: zeek

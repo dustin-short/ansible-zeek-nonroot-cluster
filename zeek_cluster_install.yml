@@ -10,9 +10,9 @@
     - repo_branch: 'release/4.0'
     - digest_salt: h3ll0fr3ind
     - enable_json: yes
-    - logdir: /zeeklogdir
+    - logdir: /opt/zeek/logs
     - zeekdir: /opt/zeek
-    - spooldir: /zeekspooldir
+    - spooldir: /opt/zeek/spool
     - libmaxminddir: /usr/share/GeoIP/
     - LogExpireInterval: 14
     - StatsLogExpireInterval: 30
