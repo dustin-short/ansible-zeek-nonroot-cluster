@@ -2,6 +2,8 @@
 
 Ansible role that installs [Zeek](https://zeek.org/) (formerly Bro) and configures it to run as a non-root user
 
+If you would like to automate geo location database updates see [ansible-geolite-maxmind-agent-install](https://github.com/dustin-short/ansible-geolite-maxmind-agent-install) repo
+
 ## Requirements
 
 None.
